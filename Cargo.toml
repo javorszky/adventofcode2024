@@ -1,0 +1,11 @@
+[package]
+name = "AdventOfCode2024"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = ["day01"]
+resolver = "2"
+
+[dependencies]
+day01 = {path = "day01"}
