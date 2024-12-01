@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 
 pub struct Day01 {
@@ -20,8 +21,28 @@ impl Day01 {
         format!("Total difference is {}", total)
     }
 
+    pub fn solve_two(&self) -> String {
+        if self.list_right.len() != self.list_left.len() {
+            return String::from("the list of location IDs is bad :(");
+        }
+
+        let mut total = 0;
+
+        // let's create a hash map from the right
+        let mut map = HashMap::new();
+
+        for x in self.list_right.iter() {
+            map.entry(x).and_modify(|e| *e += 1).or_insert(1);
+        }
+
+        for  y in self.list_left.iter() {
+            total += y * map.get(y).unwrap_or(&0);
+        }
+
+        format!("The total similarity score is {}\n", total)
+    }
+
     pub fn new() -> Day01 {
-        println!("what is happening");
         let file_contents = fs::read_to_string("./day01/input.txt").unwrap_or("".to_string());
         let trimmed = file_contents.trim();
 
@@ -47,8 +68,6 @@ impl Day01 {
         left_list.sort();
         right_list.sort();
 
-        println!("Left list: {:?}", left_list);
-        println!("Right list: {:?}", right_list);
         Day01 {
             list_left: left_list,
             list_right: right_list,
