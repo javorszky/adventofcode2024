@@ -8,16 +8,14 @@ pub struct Day01 {
 impl Day01 {
     pub fn solve(&self) -> String {
         if self.list_right.len() != self.list_left.len() {
-            return String::from("the list of location IDs is bad :(")
+            return String::from("the list of location IDs is bad :(");
         }
 
         let mut total = 0;
 
         for (i, x) in self.list_left.iter().enumerate() {
-total += (x - self.list_right[i]).abs();
+            total += (x - self.list_right[i]).abs();
         }
-
-
 
         format!("Total difference is {}", total)
     }
@@ -45,7 +43,6 @@ total += (x - self.list_right[i]).abs();
                 right_list.push(x);
             }
         }
-
 
         left_list.sort();
         right_list.sort();
