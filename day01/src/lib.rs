@@ -39,7 +39,7 @@ impl Day01 {
             total += y * map.get(y).unwrap_or(&0);
         }
 
-        format!("The total similarity score is {}\n", total)
+        format!("The total similarity score is {}", total)
     }
 
     pub fn new() -> Day01 {
