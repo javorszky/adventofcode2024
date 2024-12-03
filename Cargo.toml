@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [workspace]
-members = ["day01", "day02"]
+members = ["day01", "day02", "day03"]
 resolver = "2"
 
 [dependencies]
 day01 = {path = "day01"}
 day02 = {path = "day02"}
+day03 = {path = "day03"}
