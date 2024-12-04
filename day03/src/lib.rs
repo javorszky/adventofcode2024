@@ -75,14 +75,11 @@ impl Day03 {
         sum
     }
 
-
     fn get_enabled_only(&self) -> String {
         let mut enabled: String = "".to_owned();
         // start regex
         let re_start = Regex::new(r"(?s)^.*?don't\(\)").unwrap();
-
         let beginning = re_start.find(self.input).unwrap().as_str();
-        println!("beginning match: {}", beginning);
 
         enabled.push_str(beginning);
 

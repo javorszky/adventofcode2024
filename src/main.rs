@@ -15,8 +15,10 @@ fn main() {
     // println!("Day 2 part 2: {}", result);
 
     // Day 03
-    let d3 = day03::Day03::new();
-    println!("Day 3 part 1: sum of valid mul products is {}", d3.part1());
+    // let d3 = day03::Day03::new();
+    // println!("Day 3 part 1: sum of valid mul products is {}", d3.part1());
+    //
+    // println!("Day 3 part 2: {}", d3.part2());
 
-    println!("Day 3 part 2: {}", d3.part2());
+    println!("Day 4 part 1: {}", day04::part1())
 }
