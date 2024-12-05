@@ -27,4 +27,5 @@ fn main() {
 
     // Day 5
     println!("\nDay 5 part 1: sum of middle numbers of valid lines is {}.", day05::part1());
+    println!("Day 5 part 2: after fixing the invalid lines, their middles is {}.", day05::part2());
 }
