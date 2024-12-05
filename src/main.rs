@@ -21,6 +21,10 @@ fn main() {
 
     println!("Day 3 part 2: sum of valid and enabled mul products is {}.", d3.part2());
 
+    // Day 4
     println!("\nDay 4 part 1: number of XMAS words: {}.", day04::part1());
     println!("Day 4 part 2: number of pair of MAS words in diagonal X shape: {}.", day04::part2());
+
+    // Day 5
+    println!("\nDay 5 part 1: sum of middle numbers of valid lines is {}.", day05::part1());
 }
