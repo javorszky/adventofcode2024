@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
-use crate::{next_coord, parse_char_to_tile, part2, Coordinate, Direction, Tile, OutOfMapError};
+use crate::{next_coord, parse_char_to_tile, Coordinate, Direction, Tile, OutOfMapError};
 
 struct LoopError;
 
@@ -23,13 +23,11 @@ struct Candidate {
     at_coordinate: Coordinate
 }
 
-
 struct P2Day06 {
     map: HashMap<Coordinate, Tile>,
+    visited: HashSet<Coordinate>,
     visited_with_direction: HashMap<(Coordinate, Direction), Tile>,
     visited_with_direction_vec: Vec<(Coordinate, Direction)>, // so we have this in order
-    obstacles_per_width_first: HashMap<i32, i32>,
-    obstacles_per_height_first: HashMap<i32, i32>,
     current_coordinate: Coordinate,
     starting_coordinate: Coordinate,
     direction: Direction,
@@ -39,9 +37,6 @@ struct P2Day06 {
 impl P2Day06 {
     fn new(data: &str) -> P2Day06 {
         let mut map: HashMap<Coordinate, Tile> = HashMap::new();
-        let mut obstacles_per_width_first: HashMap<i32, i32> = HashMap::new();
-        let mut obstacles_per_height_first: HashMap<i32, i32> = HashMap::new();
-
         let mut starting_coordinate: Coordinate = (0, 0);
         let mut starting_direction: Direction = Direction::Up;
 
@@ -67,10 +62,6 @@ impl P2Day06 {
                         starting_coordinate = coord;
                         starting_direction = Direction::Up;
                     }
-                    Tile::Obstacle => {
-                        obstacles_per_height_first.insert(coord.0, coord.1);
-                        obstacles_per_width_first.insert(coord.1, coord.0);
-                    }
                     _ => {}
                 }
 
@@ -83,13 +74,12 @@ impl P2Day06 {
             current_coordinate: starting_coordinate,
             starting_coordinate,
             direction: starting_direction,
+            visited: HashSet::new(),
             visited_with_direction: HashMap::from([(
                 (starting_coordinate, starting_direction),
                 Tile::Visited,
             )]),
             visited_with_direction_vec: vec![(starting_coordinate, starting_direction)],
-            obstacles_per_width_first,
-            obstacles_per_height_first,
             logs: vec![format!(
                 "Starting at coordinate {:?} with guard facing {:?}",
                 starting_coordinate, starting_direction
@@ -103,11 +93,11 @@ impl P2Day06 {
         // Record where we've just been
         self.visited_with_direction.insert((self.current_coordinate, self.direction), Tile::Visited);
         self.visited_with_direction_vec.push((self.current_coordinate, self.direction));
+        self.visited.insert(self.current_coordinate);
 
         let new_tile = self.map.get(&new_coordinate).unwrap_or(&Tile::Outside);
         match *new_tile {
             Tile::Outside => {
-                // println!("found an outside, breaking");
                 return Err(OutOfMapError);
             }
             Tile::Obstacle => {
@@ -147,7 +137,6 @@ impl P2Day06 {
 
         match *new_tile {
             Tile::Outside => {
-                // println!("found an outside, breaking");
                 return Err(WalkError::OutOfMapError)
             }
             Tile::Obstacle => {
@@ -199,22 +188,17 @@ impl P2Day06 {
     }
 
     fn does_it_hit_obstacle(&self, coord: Coordinate, dir: Direction) ->  bool {
-        // println!("checking for coord {:?} going {:?}", coord, dir);
-
         let mut new_coord = coord;
 
         loop {
             new_coord = next_coord(&new_coord, &dir);
-            // println!("-- new coord is {:?}", new_coord);
             let nt = self.map.get(&new_coord).unwrap_or(&Tile::Outside);
 
             match nt {
                 Tile::Outside => {
-                    // println!("-- found outside, returning false");
                     return false
                 },
                 Tile::Obstacle => {
-                    // println!("-- found obstacle, returning true");
                     return true
                 }
                 _ => {
@@ -226,7 +210,6 @@ impl P2Day06 {
     }
 }
 
-
 fn should_skip_next_tile(day: &P2Day06, coordinate: &Coordinate) -> bool {
     let next_tile = day.map.get(coordinate).unwrap_or(&Tile::Outside);
     if *next_tile == Tile::Outside
@@ -234,7 +217,6 @@ fn should_skip_next_tile(day: &P2Day06, coordinate: &Coordinate) -> bool {
         || *next_tile == Tile::GuardUp {
         // if the next tile is an obstacle already, or outside, or a guard, then I won't
         // be able to place a paradox object here.
-        // println!("-- next tile ({:?}) is {:?}, onwards", coordinate, next_tile);
         return true;
     }
 
@@ -243,52 +225,59 @@ fn should_skip_next_tile(day: &P2Day06, coordinate: &Coordinate) -> bool {
 
 
 pub fn part2(data: &str) -> i32 {
-    let mut day = part2::P2Day06::new(data);
+    let mut day = P2Day06::new(data);
     // walk the first time, as usual
     day.walk();
 
     let mut candidates : Vec<Candidate> = Vec::new();
+    let mut checked: HashSet<Coordinate> = HashSet::new();
 
     for (c, d) in day.visited_with_direction_vec.iter() {
-        // println!("\nOn coordinate {:?} going direction {:?}", c, d);
+        // store current coordinate in a new "visited" vec that we're growing. This is used to check
+        // whether we'd try to put an obstacle onto a path we have been on which would mean the
+        // guard would not reach the floor she's on at the moment because her path would have been
+        // broken earlier.
+        checked.insert(*c);
 
         let nc = next_coord(c, d);
         if should_skip_next_tile(&day, &nc) {
-            // println!("-- skipped next tile found at {:?}", nc);
             continue;
+        }
+
+        if checked.contains(&nc) {
+            continue
         }
 
         if day.does_it_hit_obstacle(*c, d.turn90()) {
             let cand = Candidate{
-                place_obstacle_at: nc,
-                while_going: *d,
-                at_coordinate: *c,
+                place_obstacle_at: nc, // new obstacle is here
+                while_going: *d, // starting direction is here
+                at_coordinate: *c, // starting coordinate is here
             };
             candidates.push(cand);
-            // println!("-- adding candidate at {:?} dir {:?} starting {:?}", nc, d, c);
         }
     }
 
     let mut unique_placements:HashSet<Coordinate> = HashSet::new();
 
     for candidate in candidates {
-        // println!("\nChecking for candidate at {:?}", candidate.place_obstacle_at);
-
         let mut m = day.map.clone();
-        m.insert(candidate.place_obstacle_at, Tile::Obstacle);
 
-        let mut obh = day.obstacles_per_height_first.clone();
-        obh.insert(candidate.place_obstacle_at.0, candidate.place_obstacle_at.1);
+        match m.insert(candidate.place_obstacle_at, Tile::Obstacle) {
+            None => print!("replacing floor to obstacle at {:?} failed", candidate.place_obstacle_at),
+            Some(old) => {
+                if old != Tile::Floor {
+                    println!("something very wrong happened, we're updating the tile to an obstacle, but the old one is a {:?}", old)
+                }
+            }
+        }
 
-        let mut obw = day.obstacles_per_width_first.clone();
-        obw.insert(candidate.place_obstacle_at.1, candidate.place_obstacle_at.0);
-
+        // create a copy candidate of the original.
         let mut candidate_day = P2Day06 {
             map: m,
             visited_with_direction: HashMap::new(),
             visited_with_direction_vec: Vec::new(),
-            obstacles_per_width_first: obw,
-            obstacles_per_height_first: obh,
+            visited: HashSet::new(),
             current_coordinate: candidate.at_coordinate,
             starting_coordinate: candidate.at_coordinate,
             direction: candidate.while_going,
@@ -297,25 +286,21 @@ pub fn part2(data: &str) -> i32 {
 
         if candidate_day.walk_loop().is_err() {
             unique_placements.insert(candidate.place_obstacle_at);
-            // println!("-- candidate caused a loop");
-            // possibilities += 1;
         }
-    }
-
-    if unique_placements.contains(&(day.starting_coordinate.0, day.starting_coordinate.1)) {
-        println!("unique placements has the starting coordinate in it...")
     }
 
     unique_placements.remove(&(day.starting_coordinate.0, day.starting_coordinate.1));
 
-    if unique_placements.contains(&(day.starting_coordinate.0, day.starting_coordinate.1)) {
-        println!("unique placements still has the starting coordinate in it even tho I removed it...")
-    }
-
-
-    // println!("paradox obstacles: {:?}", possibilities);
-
     unique_placements.len() as i32
+}
+
+fn direction_to_guard(dir: &Direction) -> Tile {
+    match dir {
+        Direction::Up => {Tile::GuardUp}
+        Direction::Left => {Tile::GuardLeft}
+        Direction::Down => {Tile::GuardDown}
+        Direction::Right => {Tile::GuardRight}
+    }
 }
 
 

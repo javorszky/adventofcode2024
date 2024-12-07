@@ -1,8 +1,3 @@
-use crossterm::event;
-use crossterm::event::Event;
-use ratatui::Frame;
-use ratatui::text::Text;
-
 fn main() {
 
     println!("You're reading the Advent of Code 2024 solutions by Gabor Javorszky.");
