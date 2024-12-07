@@ -28,9 +28,11 @@ fn main() {
     // println!("\nDay 5 part 1: sum of middle numbers of valid lines is {}.", day05::part1());
     // println!("Day 5 part 2: after fixing the invalid lines, their middles is {}.", day05::part2());
 
-    // Dy 6
+    // Day 6
     // println!("\nDay 6 part 1: Guard visited {} places", day06::solve_part1());
-    println!("Day 6 part 2 x: We can place {} obstacles to create a loop", day06::solve_part2());
+    // println!("Day 6 part 2 x: We can place {} obstacles to create a loop", day06::solve_part2());
 
-
+    // Day 7
+    println!("\nDay 7 part 1 example: Sum of calibration results: {}", day07::solve_part1_example());
+    println!("\nDay 7 part 1: Sum of calibration results: {}", day07::solve_part1());
 }
