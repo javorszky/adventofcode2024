@@ -8,9 +8,11 @@ members = ["day01", "day02", "day03", "day04", "day05", "day06"]
 resolver = "2"
 
 [dependencies]
+crossterm = "0.28.1"
 day01 = {path = "day01"}
 day02 = {path = "day02"}
 day03 = {path = "day03"}
 day04 = {path = "day04"}
 day05 = {path = "day05"}
 day06 = {path = "day06"}
+ratatui = "0.29.0"

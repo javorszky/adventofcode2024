@@ -1,3 +1,7 @@
+use crossterm::event;
+use crossterm::event::Event;
+use ratatui::Frame;
+use ratatui::text::Text;
 
 fn main() {
 
@@ -30,5 +34,8 @@ fn main() {
     // println!("Day 5 part 2: after fixing the invalid lines, their middles is {}.", day05::part2());
 
     // Dy 6
-    println!("\nDay 6 part 1 example: Guard visited {} places", day06::solve_part1());
+    // println!("\nDay 6 part 1: Guard visited {} places", day06::solve_part1());
+    println!("Day 6 part 2 x: We can place {} obstacles to create a loop", day06::solve_part2());
+
+
 }
