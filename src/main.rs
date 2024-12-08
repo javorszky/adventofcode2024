@@ -34,5 +34,9 @@ fn main() {
 
     // Day 7
     println!("\nDay 7 part 1 example: Sum of calibration results: {}", day07::solve_part1_example());
-    println!("\nDay 7 part 1: Sum of calibration results: {}", day07::solve_part1());
+    println!("Day 7 part 1: Sum of calibration results: {}", day07::solve_part1());
+
+    println!("Day 7 part 2 example: Sum of calibration results with concat: {}", day07::solve_part2_example());
+    println!("Day 7 part 2: Sum of calibration results with concat: {}", day07::solve_part2());
+
 }

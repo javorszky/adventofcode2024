@@ -6,13 +6,13 @@ enum Operators {
     Product
 }
 
-pub(crate) fn solve(data: &str) -> i64 {
+pub(crate) fn solve(data: &str) -> u64 {
     let lines: Vec<Line> = data.trim().lines().map(|x| -> Line {
         let sides = x.split(":").collect::<Vec<&str>>();
 
         Line {
-            target: sides[0].parse::<i64>().unwrap(),
-            parts: sides[1].trim().split_whitespace().map(|x| x.parse::<i64>().unwrap()).collect()
+            target: sides[0].parse::<u64>().unwrap(),
+            parts: sides[1].trim().split_whitespace().map(|x| x.parse::<u64>().unwrap()).collect()
         }
     }).collect();
 
@@ -56,7 +56,7 @@ fn is_valid(l: &Line) -> bool {
     false
 }
 
-fn operate(left_number: i64, operator: &Operators, right_number: i64) -> i64 {
+fn operate(left_number: u64, operator: &Operators, right_number: u64) -> u64 {
     match operator {
         Operators::Plus => {
             left_number + right_number

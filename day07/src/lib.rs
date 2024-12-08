@@ -1,4 +1,5 @@
 mod part1;
+mod part2;
 
 const EXAMPLE: &str = "190: 10 19
 3267: 81 40 27
@@ -12,14 +13,22 @@ const EXAMPLE: &str = "190: 10 19
 
 #[derive(Debug)]
 struct Line {
-    target: i64,
-    parts: Vec<i64>,
+    target: u64,
+    parts: Vec<u64>,
 }
 
-pub fn solve_part1_example() -> i64 {
+pub fn solve_part1_example() -> u64 {
     part1::solve(EXAMPLE)
 }
 
-pub fn solve_part1() -> i64 {
+pub fn solve_part1() -> u64 {
     part1::solve(include_str!("../input.txt"))
+}
+
+pub fn solve_part2_example() -> u64 {
+    part2::solve(EXAMPLE)
+}
+
+pub fn solve_part2() -> u64 {
+    part2::solve(include_str!("../input.txt"))
 }
