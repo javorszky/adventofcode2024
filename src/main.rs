@@ -33,10 +33,13 @@ fn main() {
     // println!("Day 6 part 2 x: We can place {} obstacles to create a loop", day06::solve_part2());
 
     // Day 7
-    println!("\nDay 7 part 1 example: Sum of calibration results: {}", day07::solve_part1_example());
-    println!("Day 7 part 1: Sum of calibration results: {}", day07::solve_part1());
+    // println!("\nDay 7 part 1 example: Sum of calibration results: {}", day07::solve_part1_example());
+    // println!("Day 7 part 1: Sum of calibration results: {}", day07::solve_part1());
+    //
+    // println!("Day 7 part 2 example: Sum of calibration results with concat: {}", day07::solve_part2_example());
+    // println!("Day 7 part 2: Sum of calibration results with concat: {}", day07::solve_part2());
 
-    println!("Day 7 part 2 example: Sum of calibration results with concat: {}", day07::solve_part2_example());
-    println!("Day 7 part 2: Sum of calibration results with concat: {}", day07::solve_part2());
-
+    // Day 8
+    println!("\nDay 8 part 1 example: {}", day08::solve_part1_example());
+    println!("Day 8 part 1: There are {} unique antinodes on the map.", day08::solve_part1())
 }
