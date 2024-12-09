@@ -41,5 +41,8 @@ fn main() {
 
     // Day 8
     println!("\nDay 8 part 1 example: {}", day08::solve_part1_example());
-    println!("Day 8 part 1: There are {} unique antinodes on the map.", day08::solve_part1())
+    println!("Day 8 part 1: There are {} unique antinodes on the map.", day08::solve_part1());
+
+    println!("Day 8 part 2 example: {}", day08::solve_part2_example());
+    println!("Day 8 part 2: There are {} unique infinitely resonant antinodes on the map.", day08::solve_part2());
 }

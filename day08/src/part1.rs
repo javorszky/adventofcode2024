@@ -3,7 +3,6 @@ use crate::Coordinate;
 
 
 struct Day08 {
-    map: HashMap<Coordinate, char>,
     last_h_idx: usize,
     last_w_idx: usize,
     antennae: HashMap<char, Vec<Coordinate>>,
@@ -14,7 +13,6 @@ impl Day08 {
     fn new(input: &str) -> Day08 {
         let field: char = ".".parse().unwrap();
 
-        let mut map = HashMap::new();
         let mut antennae = HashMap::new();
         let mut last_h_idx:usize = 0;
         let mut last_w_idx = 0;
@@ -25,13 +23,11 @@ impl Day08 {
 
             for (width, ch) in line.trim().chars().enumerate() {
                 let c = Coordinate{ height: height as i32, width: width as i32 };
-                map.insert(c, ch);
                 if !ch.eq(&field) {antennae.entry(ch).or_insert(Vec::new()).push(c);}
             }
         }
 
         Day08 {
-            map,
             last_h_idx,
             last_w_idx,
             antennae,
@@ -60,7 +56,7 @@ impl Day08 {
 
         for coords in self.antinodes.values() {
             for coord in coords {
-                unique_antennae.insert(coord.clone());
+                unique_antennae.insert(*coord);
             }
         }
 
@@ -97,7 +93,7 @@ pub(crate) fn solve(input: &str) -> usize {
     d.count_unique_antennae()
 }
 
-fn generate_all_node_pairs(coords: Vec<Coordinate>) -> Vec<(Coordinate, Coordinate)> {
+pub(crate) fn generate_all_node_pairs(coords: Vec<Coordinate>) -> Vec<(Coordinate, Coordinate)> {
     if coords.len() < 2 {
         return vec![];
     }

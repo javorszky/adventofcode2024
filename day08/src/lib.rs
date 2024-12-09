@@ -1,4 +1,5 @@
 mod part1;
+mod part2;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 struct Coordinate {
@@ -19,7 +20,7 @@ pub fn solve_part1_example() -> usize{
 ........A...
 .........A..
 ............
-.... .... .... ";
+............";
 
     part1::solve(input)
 }
@@ -28,4 +29,27 @@ pub fn solve_part1() -> usize {
     let input = include_str!("../input.txt");
 
     part1::solve(input)
+}
+
+pub fn solve_part2_example() -> usize {
+    let input = "............
+........0...
+.....0......
+.......0....
+....0.......
+......A.....
+............
+............
+........A...
+.........A..
+............
+............";
+
+    part2::solve(input)
+}
+
+pub fn solve_part2() -> usize {
+    let input = include_str!("../input.txt");
+
+    part2::solve(input)
 }
