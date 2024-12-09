@@ -40,9 +40,13 @@ fn main() {
     // println!("Day 7 part 2: Sum of calibration results with concat: {}", day07::solve_part2());
 
     // Day 8
-    println!("\nDay 8 part 1 example: {}", day08::solve_part1_example());
-    println!("Day 8 part 1: There are {} unique antinodes on the map.", day08::solve_part1());
+    // println!("\nDay 8 part 1 example: {}", day08::solve_part1_example());
+    // println!("Day 8 part 1: There are {} unique antinodes on the map.", day08::solve_part1());
+    //
+    // println!("Day 8 part 2 example: {}", day08::solve_part2_example());
+    // println!("Day 8 part 2: There are {} unique infinitely resonant antinodes on the map.", day08::solve_part2());
 
-    println!("Day 8 part 2 example: {}", day08::solve_part2_example());
-    println!("Day 8 part 2: There are {} unique infinitely resonant antinodes on the map.", day08::solve_part2());
+    // Day 9
+    println!("\nDay 9 part 1 example: {}", day09::solve_part1_example());
+    println!("Day 9 part 1: The sum of index * IDs after compacting is {}", day09::solve_part1());
 }
