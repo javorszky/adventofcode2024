@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 use std::fmt::{Display};
 use std::ops::{Div};
 
-#[derive(Debug, Copy, Clone)]
-enum NumericBlockType {
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub(crate) enum NumericBlockType {
     Space,
     Data(u32)
 }
@@ -17,21 +17,21 @@ impl Display for NumericBlockType {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
-struct Block {
-    block_type: NumericBlockType,
-    start: u32,
-    length: u32
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub(crate) struct Block {
+    pub(crate) block_type: NumericBlockType,
+    pub(crate) start: u32,
+    pub(crate) length: u32
 }
 
-struct Day09 {
-    data_blocks: Vec<Block>,
-    space_blocks: Vec<Block>,
-    disk: Vec<NumericBlockType>,
+pub(crate) struct Day09 {
+    pub(crate) data_blocks: Vec<Block>,
+    pub(crate) space_blocks: Vec<Block>,
+    pub (crate) disk: Vec<NumericBlockType>,
 }
 
 impl Day09 {
-    fn new(input: &str) -> Day09 {
+    pub(crate) fn new(input: &str) -> Day09 {
         let mut data_blocks: Vec<Block> = Vec::new();
         let mut space_blocks: Vec<Block> = Vec::new();
         let mut offset: u32 = 0;
@@ -58,16 +58,12 @@ impl Day09 {
 
         let missing = data_blocks.len() - space_blocks.len();
         for _ in 0..missing {
-            println!("there was a space block missing, adding one at the end");
             space_blocks.push(Block {
                 block_type: NumericBlockType::Space,
                 start: offset,
                 length: 0
             })
         }
-
-        println!("len space: {}, len data: {}", space_blocks.len(), data_blocks.len());
-        println!("last 3 data blocks: {:?}", data_blocks.last_chunk::<3>().unwrap());
 
         let mut disk: Vec<NumericBlockType> = Vec::new();
         for i in 0..data_blocks.len() {
@@ -89,7 +85,6 @@ impl Day09 {
 }
 
 fn render_disk(disk: &[NumericBlockType]) -> String {
-
     disk.iter().map(|entry| {
         match entry {
             NumericBlockType::Space => ".".to_string(),
@@ -129,7 +124,6 @@ pub(crate) fn solve(data: &str) -> u64 {
         }
 
         whoops_all_data.push(day.data_blocks[i]);
-
         // println!("pushed data block at {} into all data vec", i);
         // println!("all data vec: {:?}", whoops_all_data);
 
@@ -158,19 +152,14 @@ pub(crate) fn solve(data: &str) -> u64 {
                         start: total_moved,
                     });
 
-
-
                     total_moved += remaining;
 
                     block_to_move.length -= remaining;
                     remaining = 0;
-
-
                     // println!("pushed a new block to whoops all data. Total moved is {}, remaining set to 0, block length left is {}.New vec\n{:?}\n", total_moved, block_to_move.length, whoops_all_data)
                 }
                 Ordering::Equal => {
                     // println!("remaining in space {} was equal to remaining in block {}", remaining, block_to_move.length);
-
                     block_to_move.start = total_moved;
 
                     whoops_all_data.push(block_to_move);
@@ -204,7 +193,7 @@ pub(crate) fn solve(data: &str) -> u64 {
 
     if block_to_move.length > 0 {
         block_to_move.start = total_moved;
-        println!("we had more left, so pushing those into the block to move: {:?}", block_to_move);
+        // println!("we had more left, so pushing those into the block to move: {:?}", block_to_move);
 
         whoops_all_data.push(block_to_move);
     }
@@ -218,28 +207,9 @@ pub(crate) fn solve(data: &str) -> u64 {
         }
     }
 
-    let mut sum: u64 = 0;
-
-    for (i, block) in disk.iter().enumerate() {
-        match block {
-            NumericBlockType::Space => {
-                // do nothing
-            }
-            NumericBlockType::Data(k) => {
-                // if i < 20 {
-                // }
-                sum += (i as u64) * (*k as u64);
-                println!("i: {:4}, and k: {:4}, their product is {:16}, and running sum is {:16}",i, k,  (i as u64) * (*k as u64), sum);
-
-            }
-        }
-    }
-
-    // println!("sorted thing: {}", render_disk(&disk));
-
-
-    sum
+    disk_checksum(&*disk)
 }
+
 
 pub(crate) fn solve_swap(data: &str) -> u64 {
     let day = Day09::new(data);
@@ -257,21 +227,21 @@ pub(crate) fn solve_swap(data: &str) -> u64 {
                         // we're looking for a block, found space, so keep moving
                         next_block_idx -=1;
                     }
-                    NumericBlockType::Data(k) => {
+                    NumericBlockType::Data(_) => {
                         disk_copy.swap(next_space_idx, next_block_idx);
                         next_space_idx += 1;
                         next_block_idx -= 1;
                     }
                 }
             }
-            NumericBlockType::Data(k) => { next_space_idx += 1; }
+            NumericBlockType::Data(_) => { next_space_idx += 1; }
         }
     }
 
     disk_checksum(&disk_copy)
 }
 
-fn disk_checksum(disk: &[NumericBlockType]) -> u64 {
+pub(crate) fn disk_checksum(disk: &[NumericBlockType]) -> u64 {
     let mut sum = 0;
     for (i, block) in disk.iter().enumerate() {
         match block {
