@@ -24,7 +24,7 @@ fn main() {
     // println!("\nDay 4 part 1: number of XMAS words: {}.", day04::part1());
     // println!("Day 4 part 2: number of pair of MAS words in diagonal X shape: {}.", day04::part2());
     //
-    // // Day 5
+    // Day 5
     // println!("\nDay 5 part 1: sum of middle numbers of valid lines is {}.", day05::part1());
     // println!("Day 5 part 2: after fixing the invalid lines, their middles is {}.", day05::part2());
 
@@ -34,7 +34,7 @@ fn main() {
 
     // Day 7
     // println!("\nDay 7 part 1 example: Sum of calibration results: {}", day07::solve_part1_example());
-    // println!("Day 7 part 1: Sum of calibration results: {}", day07::solve_part1());
+    // println!("\nDay 7 part 1: Sum of calibration results: {}", day07::solve_part1());
     //
     // println!("Day 7 part 2 example: Sum of calibration results with concat: {}", day07::solve_part2_example());
     // println!("Day 7 part 2: Sum of calibration results with concat: {}", day07::solve_part2());
