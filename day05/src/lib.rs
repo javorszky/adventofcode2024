@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -58,8 +59,8 @@ fn parse_rules(data: &str) -> HashMap<i32, HashMap<i32, RuleOrder>> {
         let before = split[0].parse().unwrap();
         let after = split[1].parse().unwrap();
 
-        rules.entry(before).or_insert(HashMap::new()).insert(after, RuleOrder::After);
-        rules.entry(after).or_insert(HashMap::new()).insert(before, RuleOrder::Before);
+        rules.entry(before).or_default().insert(after, RuleOrder::After);
+        rules.entry(after).or_default().insert(before, RuleOrder::Before);
     }
 
     rules
@@ -76,15 +77,19 @@ fn parse_print(data: &str) -> HashMap<i32, HashMap<i32, RuleOrder>> {
     let parts = parse_into_numbers(data);
 
     for (current, number) in parts.iter().enumerate() {
-        for other_index in 0..parts.len() {
-            if current == other_index {
-                // we're looking at the same number, do nothing
-                continue;
-            } else if other_index < current {
-                // other index is _before_ the current one, so
-                local_hm.entry(*number).or_insert(HashMap::new()).insert(parts[other_index], RuleOrder::Before);
-            } else {
-                local_hm.entry(*number).or_insert(HashMap::new()).insert(parts[other_index], RuleOrder::After);
+        for (other_index, _) in parts.iter().enumerate() {
+            match current.cmp(&other_index) {
+                Ordering::Less => {
+                    local_hm.entry(*number).or_default().insert(parts[other_index], RuleOrder::After);
+                }
+                Ordering::Equal => {
+                    // we're looking at the same number, do nothing
+                    continue;
+                }
+                Ordering::Greater => {
+                    // other index is _before_ the current one, so
+                    local_hm.entry(*number).or_default().insert(parts[other_index], RuleOrder::Before);
+                }
             }
         }
     }
