@@ -1,4 +1,5 @@
 mod part1;
+mod part2;
 
 pub fn solve_part1_example() -> usize {
     let input = include_str!("../example.txt");
@@ -12,3 +13,12 @@ pub fn solve_part1() -> usize {
     part1::solve(input)
 }
 
+pub fn solve_part2_example() -> usize {
+    let input = include_str!("../example.txt");
+    part2::solve(input)
+}
+
+pub fn solve_part2() -> usize {
+    let input = include_str!("../input.txt");
+    part2::solve(input)
+}
