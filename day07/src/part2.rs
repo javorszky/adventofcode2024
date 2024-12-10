@@ -14,13 +14,13 @@ pub(crate) fn solve(input: &str) -> u64 {
 
         Line {
             target: sides[0].parse::<u64>().unwrap(),
-            parts: sides[1].trim().split_whitespace().map(|x| x.parse::<u64>().unwrap()).collect()
+            parts: sides[1].split_whitespace().map(|x| x.parse::<u64>().unwrap()).collect()
         }
     }).collect();
 
     lines
         .into_iter()
-        .filter(|l| is_valid(l))
+        .filter(is_valid)
         .fold(0, |acc, line| {
             acc + line.target
         })
@@ -33,7 +33,7 @@ fn is_valid(l: &Line) -> bool {
         let variant = variants_to_base3(i as u64, gaps);
 
         let mut total = l.parts[0];
-        for j in 0..l.parts.len()-1 {
+        for (j, _) in variant.iter().enumerate().take(l.parts.len()-1) {
             total = operate(total, &variant[j], l.parts[j+1]);
             if total > l.target {
                 continue 'outer;

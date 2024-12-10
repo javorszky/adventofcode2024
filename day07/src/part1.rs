@@ -12,13 +12,13 @@ pub(crate) fn solve(data: &str) -> u64 {
 
         Line {
             target: sides[0].parse::<u64>().unwrap(),
-            parts: sides[1].trim().split_whitespace().map(|x| x.parse::<u64>().unwrap()).collect()
+            parts: sides[1].split_whitespace().map(|x| x.parse::<u64>().unwrap()).collect()
         }
     }).collect();
 
     lines
         .into_iter()
-        .filter(|l| is_valid(l))
+        .filter(is_valid)
         .fold(0, |acc, line| {
             acc + line.target
         })
