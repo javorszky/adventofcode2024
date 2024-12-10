@@ -84,6 +84,7 @@ impl Day09 {
     }
 }
 
+#[allow(dead_code)]
 fn render_disk(disk: &[NumericBlockType]) -> String {
     disk.iter().map(|entry| {
         match entry {
@@ -94,6 +95,8 @@ fn render_disk(disk: &[NumericBlockType]) -> String {
         }
     }).collect::<String>().to_string()
 }
+
+#[allow(dead_code)]
 pub(crate) fn solve(data: &str) -> u64 {
     let day = Day09::new(data);
 
@@ -207,7 +210,7 @@ pub(crate) fn solve(data: &str) -> u64 {
         }
     }
 
-    disk_checksum(&*disk)
+    disk_checksum(&disk)
 }
 
 

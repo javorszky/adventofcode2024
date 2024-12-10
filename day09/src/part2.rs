@@ -21,11 +21,15 @@ pub(crate) fn solve(data: &str) -> u64 {
     }
 
     // println!("this is disk: {:?}", disk);
-    disk_checksum(&*disk)
+    disk_checksum(&disk)
 }
 
 fn compact_full_files(blocks: &mut Vec<Block>) {
     let last_idx = blocks.len()-1;
+
+    // Need this allow, because without declaring the variable, I can't set it in the match
+    // following, and without setting a value, rust will complain that it might not be initialised.
+    #[allow(unused_assignments)]
     let mut last_id: u32 = 0;
 
     let last_block_type = blocks.get(last_idx-1).unwrap().block_type;
@@ -154,7 +158,7 @@ fn find_space_for_data_id(blocks: &mut Vec<Block>, _data_id: u32) {
                 // println!("it has {} len and we're doing the range {}..{}", blocks.len(), i, i+1);
 
                 let replacement = vec![moved_data, extra_space];
-                
+
                 let _replaced_space = blocks
                     .splice(i..i+1, replacement).collect::<Vec<Block>>();
 
@@ -167,11 +171,6 @@ fn find_space_for_data_id(blocks: &mut Vec<Block>, _data_id: u32) {
             }
         }
     }
-}
-
-
-fn bla( foo:&mut Vec<i32>) {
-    foo.push(0);
 }
 
 #[cfg(test)]
@@ -224,13 +223,5 @@ mod tests {
         find_space_for_data_id(&mut blocks, 1);
 
         assert_eq!(want, blocks);
-    }
-
-    #[test]
-    fn test_bla() {
-        let mut input = vec![1, 2, 3, 4];
-        bla(&mut input);
-
-        assert_eq!(input, vec![1, 2, 3, 4, 0]);
     }
 }
