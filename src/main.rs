@@ -48,7 +48,11 @@ fn main() {
 
     // Day 9
     // println!("\nDay 9 part 1 example: {}", day09::solve_part1_example());
-    println!("\nDay 9 part 1: The sum of index * IDs after compacting is {}", day09::solve_part1());
+    // println!("\nDay 9 part 1: The sum of index * IDs after compacting is {}", day09::solve_part1());
     // println!("Day 9 part 2 example: {}", day09::solve_part2_example());
-    println!("Day 9 part 2: Checksum after moving entire files: {}", day09::solve_part2());
+    // println!("Day 9 part 2: Checksum after moving entire files: {}", day09::solve_part2());
+
+    // Day 10
+    println!("\nDay 10 part 1 example: {}", day10::solve_part1_example());
+    println!("\nDay 10 part 1: Sum of trail scores is {}", day10::solve_part1());
 }

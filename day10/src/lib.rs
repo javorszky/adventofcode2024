@@ -1,14 +1,14 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+mod part1;
+
+pub fn solve_part1_example() -> usize {
+    let input = include_str!("../example.txt");
+
+    part1::solve(input)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub fn solve_part1() -> usize {
+    let input = include_str!("../input.txt");
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    part1::solve(input)
 }
+
