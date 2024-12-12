@@ -52,10 +52,17 @@ fn main() {
     // println!("Day 9 part 2 example: {}", day09::solve_part2_example());
     // println!("Day 9 part 2: Checksum after moving entire files: {}", day09::solve_part2());
 
-    // Day 10⏳
-    println!("\nDay 10 part 1 example: {}", day10::solve_part1_example());
-    println!("Day 10 part 1: Sum of trail scores is {}", day10::solve_part1());
+    // Day 10
+    // println!("\nDay 10 part 1 example: {}", day10::solve_part1_example());
+    // println!("Day 10 part 1: Sum of trail scores is {}", day10::solve_part1());
+    //
+    // println!("Day 10 part 2 example: {}", day10::solve_part2_example());
+    // println!("Day 10 part 2: The number of distinct paths is {}", day10::solve_part2());
 
-    println!("Day 10 part 2 example: {}", day10::solve_part2_example());
-    println!("Day 10 part 2: The number of distinct paths is {}", day10::solve_part2());
+    // Day 11
+    println!("\nDay 11 part 1 example: {}", day11::solve_part1_example());
+    println!("Day 11 part 1: There are {} stones after 25 blinks.", day11::solve_part1());
+
+    println!("Day 11 part 2: There are {} stones after 75 blinks.", day11::solve_part2());
+
 }
