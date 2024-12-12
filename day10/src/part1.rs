@@ -141,12 +141,10 @@ pub(crate) fn solve(data: &str) -> usize {
 }
 
 fn find_nines(trails: Vec<Vec<Coordinate>>) -> usize {
-    let s:HashSet<Coordinate> = HashSet::from_iter(trails.iter().map(|v| v.last().unwrap().clone()));
+    let s:HashSet<Coordinate> = HashSet::from_iter(trails.iter().map(|v| *v.last().unwrap()));
 
     s.len()
 }
-
-
 
 #[cfg(test)]
 mod tests {
