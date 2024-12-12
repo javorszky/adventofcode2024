@@ -60,9 +60,12 @@ fn main() {
     // println!("Day 10 part 2: The number of distinct paths is {}", day10::solve_part2());
 
     // Day 11
-    println!("\nDay 11 part 1 example: {}", day11::solve_part1_example());
-    println!("Day 11 part 1: There are {} stones after 25 blinks.", day11::solve_part1());
+    // println!("\nDay 11 part 1 example: {}", day11::solve_part1_example());
+    // println!("Day 11 part 1: There are {} stones after 25 blinks.", day11::solve_part1());
+    //
+    // println!("Day 11 part 2: There are {} stones after 75 blinks.", day11::solve_part2());
 
-    println!("Day 11 part 2: There are {} stones after 75 blinks.", day11::solve_part2());
-
+    // Day 12
+    println!("\nDay 12 part 1 example: {}", day12::solve_part1_example());
+    println!("Day 12 part 1: Total price for perimeter * area for plots is {}", day12::solve_part1());
 }
