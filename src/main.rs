@@ -68,4 +68,7 @@ fn main() {
     // Day 12
     println!("\nDay 12 part 1 example: {}", day12::solve_part1_example());
     println!("Day 12 part 1: Total price for perimeter * area for plots is {}", day12::solve_part1());
+
+    println!("Day 12 part 2 example: {}", day12::solve_part2_example());
+    println!("Day 12 part 2: The new price using bulk pricing is {}", day12::solve_part2());
 }

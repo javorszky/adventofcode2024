@@ -1,17 +1,17 @@
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Hash, PartialEq, Eq, Copy, Clone)]
-struct Coordinate {
-    horizontal: i32,
-    vertical: i32,
+pub(crate) struct Coordinate {
+    pub(crate) horizontal: i32,
+    pub(crate) vertical: i32,
 }
 
 impl Coordinate {
-    fn new(horizontal: i32, vertical: i32) -> Self {
+    pub(crate) fn new(horizontal: i32, vertical: i32) -> Self {
         Self { horizontal, vertical }
     }
 
-    fn neighbours(&self) -> Vec<Self> {
+    pub(crate) fn neighbours(&self) -> Vec<Self> {
         vec![
             Self::new(self.horizontal-1, self.vertical),
             Self::new(self.horizontal+1, self.vertical),
@@ -21,25 +21,22 @@ impl Coordinate {
     }
 }
 
-struct Map {
-    map: HashMap<Coordinate, String>
-}
 
 #[derive(Debug)]
-struct Region {
-    plots: HashSet<Coordinate>
+pub(crate) struct Region {
+    pub(crate) plots: HashSet<Coordinate>
 }
 
 impl Region {
-    fn new(plots: HashSet<Coordinate>) -> Self {
+    pub(crate) fn new(plots: HashSet<Coordinate>) -> Self {
         Self { plots }
     }
 
-    fn area(&self) -> i32 {
+    pub(crate) fn area(&self) -> i32 {
         self.plots.len() as i32
     }
 
-    fn perimeter(&self) -> i32 {
+    pub(crate) fn perimeter(&self) -> i32 {
         let mut visited: HashSet<Coordinate> = HashSet::new();
 
         let mut perimeter = 0;
@@ -48,6 +45,8 @@ impl Region {
             if visited.contains(c) {
                 continue;
             }
+
+            visited.insert(*c);
 
             for n in c.neighbours() {
                 if !self.plots.contains(&n) {
@@ -78,7 +77,7 @@ pub(crate) fn solve(input: &str) -> u32 {
     for coord in map.keys() {
         let region = flood_fill(&map, *coord, map.get(coord).unwrap(), &mut visited);
 
-        regions.push(Region { plots: region });
+        regions.push(Region::new(region));
     }
 
     let regions: Vec<&Region> = regions.iter().filter(|&r| !r.plots.is_empty()).collect();
@@ -91,7 +90,7 @@ pub(crate) fn solve(input: &str) -> u32 {
     price as u32
 }
 
-fn flood_fill(map: &HashMap<Coordinate, String>, origin: Coordinate, plot_type: &String, visited: &mut HashSet<Coordinate>) -> HashSet<Coordinate> {
+pub(crate) fn flood_fill(map: &HashMap<Coordinate, String>, origin: Coordinate, plot_type: &String, visited: &mut HashSet<Coordinate>) -> HashSet<Coordinate> {
     let unknown: &String = &"1".to_string();
     // println!("flood fill on coordinate {:?}", origin);
     let mut local_set = HashSet::new();
