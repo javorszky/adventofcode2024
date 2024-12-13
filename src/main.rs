@@ -73,8 +73,9 @@ fn main() {
     // println!("Day 12 part 2: The new price using bulk pricing is {}", day12::solve_part2());
 
     // Day 13
-    println!("/nDay 13 part 1 example: {}", day13::solve_part1_example());
-    println!("Day 13 part 1: Fewest tokens to win all prizes is {}", day13::solve_part1());
+    // println!("\nDay 13 part 1 example: {}", day13::solve_part1_example());
+    println!("\nDay 13 part 1: Fewest tokens to win all prizes is {}", day13::solve_part1());
 
-    println!("Day 13 part 2 example: {}", day13::solve_part2_example());
+    // println!("Day 13 part 2 example: {}", day13::solve_part2_example());
+    println!("Day 13 part 2: Once properly parsed, the fewest tokens is {}", day13::solve_part2());
 }

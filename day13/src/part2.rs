@@ -1,12 +1,10 @@
 use crate::part1::{ClawMachine, Coordinate, Vector};
 
-const COST:u64 = 10000000000000;
+const COST:i64 = 10_000_000_000_000; // thou, mil, bil, tril, quadril, 10 quadrillion
 
 
 impl Coordinate {
     fn try_from_part2(input: &str) -> Option<Coordinate> {
-        println!("hello from part 2 coordinate try from");
-
         let nums = crate::part1::str_to_nums(&input[7..])?;
         Some(Self::new(nums.0+COST, nums.1+COST))
     }
@@ -24,7 +22,7 @@ impl ClawMachine {
     }
 }
 
-pub(crate) fn solve(input: &str) -> i32 {
+pub(crate) fn solve(input: &str) -> i64 {
     let machines:Vec<ClawMachine> = input
         .trim()
         .split("\n\n")
