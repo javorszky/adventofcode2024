@@ -74,8 +74,12 @@ fn main() {
 
     // Day 13
     // println!("\nDay 13 part 1 example: {}", day13::solve_part1_example());
-    println!("\nDay 13 part 1: Fewest tokens to win all prizes is {}", day13::solve_part1());
+    // println!("\nDay 13 part 1: Fewest tokens to win all prizes is {}", day13::solve_part1());
 
     // println!("Day 13 part 2 example: {}", day13::solve_part2_example());
-    println!("Day 13 part 2: Once properly parsed, the fewest tokens is {}", day13::solve_part2());
+    // println!("Day 13 part 2: Once properly parsed, the fewest tokens is {}", day13::solve_part2());
+
+    // Day 14
+    println!("\nDay 14 part 1 example: {}", day14::solve_part1_example());
+    println!("\nDay 14 part 1: Safety score will be {} after 100 seconds on a 101 wide and 103 tall room", day14::solve_part1());
 }
