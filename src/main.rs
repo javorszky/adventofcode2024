@@ -82,4 +82,6 @@ fn main() {
     // Day 14
     println!("\nDay 14 part 1 example: {}", day14::solve_part1_example());
     println!("\nDay 14 part 1: Safety score will be {} after 100 seconds on a 101 wide and 103 tall room", day14::solve_part1());
+
+    println!("Day 14 part 2: {}", day14::solve_part2());
 }

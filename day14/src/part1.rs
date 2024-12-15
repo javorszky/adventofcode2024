@@ -8,12 +8,12 @@ enum Quadrant {
     BottomLeft,
     BottomRight,
 }
-struct BadRobotError {
+pub(crate) struct BadRobotError {
     msg: String,
 }
 
 impl BadRobotError {
-    fn new(msg: &str) -> BadRobotError {
+    pub(crate) fn new(msg: &str) -> BadRobotError {
         BadRobotError { msg: msg.to_string() }
     }
 }
@@ -31,7 +31,7 @@ impl Display for BadRobotError {
 }
 
 #[derive(Debug)]
-struct Robot {
+pub(crate) struct Robot {
     starting_position_horizontal: i32,
     starting_position_vertical: i32,
     v_horizontal: i32,
@@ -51,7 +51,7 @@ impl Display for Robot {
 }
 
 impl Robot {
-    fn try_from(input: &str) -> Result<Robot, BadRobotError> {
+    pub(crate) fn try_from(input: &str) -> Result<Robot, BadRobotError> {
         // p=0,0 v=1,3
         let parts: Vec<Vec<i32>> = input.split_whitespace().map(|line| {
             line[2..].split(',').map(|part| part.parse().unwrap()).collect::<Vec<i32>>()})
@@ -64,7 +64,7 @@ impl Robot {
         Ok(Robot::new(parts[0][0], parts[0][1],parts[1][0], parts[1][1]))
     }
 
-    fn new(pos_h: i32, pos_v: i32, vel_h: i32, vel_v: i32) -> Robot {
+    pub(crate) fn new(pos_h: i32, pos_v: i32, vel_h: i32, vel_v: i32) -> Robot {
         Robot {
             starting_position_horizontal: pos_h,
             starting_position_vertical: pos_v,
@@ -76,7 +76,7 @@ impl Robot {
     /// Method gets passed a tuple of numbers: the width and height of the field we're looking at,
     /// and the number of times it needs to move. The result is the coordinate it ends up after
     /// <times> number of hops.
-    fn move_robot(&self, bounds: (i32, i32), times: i32) -> (i32, i32) {
+    pub(crate) fn move_robot(&self, bounds: (i32, i32), times: i32) -> (i32, i32) {
         // println!("\nMoving robot {} {} times within bounds {:?}", self, times, bounds);
         let mut res_h = (self.starting_position_horizontal + times * self.v_horizontal) % (bounds.0);
         let mut res_v = (self.starting_position_vertical + times * self.v_vertical) % (bounds.1);
@@ -97,21 +97,19 @@ impl Robot {
 
         // println!("after wraparound checks, resh and resv are {}, {}", res_h, res_v);
 
-
-
         (res_h, res_v)
     }
 }
 
-struct Day14 {
-    width: i32,
-    height: i32,
+pub(crate) struct Day14 {
+    pub(crate) width: i32,
+    pub(crate) height: i32,
     steps: i32,
-    robots: Vec<Robot>,
+    pub(crate) robots: Vec<Robot>,
 }
 
 impl Day14 {
-    fn new(width: i32, height: i32, steps: i32, robots: Vec<Robot>) -> Day14 {
+    pub(crate) fn new(width: i32, height: i32, steps: i32, robots: Vec<Robot>) -> Day14 {
         Day14{width, height, steps, robots}
     }
 
