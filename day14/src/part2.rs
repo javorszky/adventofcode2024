@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::Write;
-use crate::part1::Day14;
+use crate::part1::{Day14, Robot};
 
 impl Day14 {
     fn find_easter_egg(&self) -> i32 {
@@ -46,51 +46,116 @@ impl Day14 {
 
     fn find_iterations_where_robots_are_in_middle_topmost_row(&self) -> Vec<i32> {
         let bounds = (self.width, self.height);
-        let mut i = 0;
-        let mut seconds = 12; // we start on iteration 12, the first one that has 1 robot in the topmost row
-        let mut distance = 10; // and the next one is 10 from this one
-        let mut one_at_top:Vec<i32> = Vec::new();
-        let mut three_on_second: Vec<i32> = Vec::new();
+        let mid = self.width / 2;
+        println!("mid is {}, width is {}", mid, self.width);
 
+        // at seconds 1979 the top one is in the middle, a distance of 1979 from the previous
+        // at seconds 2746 the top one is in the middle, a distance of 767 from the previous
+        // at seconds 4853 the top one is in the middle, a distance of 2107 from the previous
+        // at seconds 12382 the top one is in the middle, a distance of 7529 from the previous
+        // at seconds 13149 the top one is in the middle, a distance of 767 from the previous
+        //
+
+
+        let mut current = 97;
+        let step = 101;
+        let mut one_at_top:Vec<i32> = Vec::new();
+        let mut seconds = 0;
+        let mut distance = 0;
+
+        for i in 0..3000 {
+            let mut robot_coords: Vec<(i32, i32)> = Vec::new();
+            let mut robots_per_vert: HashMap<i32, i32> = HashMap::new();
+
+            self.robots.iter().for_each(|r| {
+                let coords = r.move_robot(bounds, current);
+                robot_coords.push(coords);
+                *robots_per_vert.entry(coords.1).or_default() += 1;
+
+                // if coords.1 == 0 && coords.0 == mid {
+                //     robots_in_middle_at_top.insert(seconds, *r);
+                // }
+            });
+
+            /**
+            So let's find out the first ones
+            */
+            let mut robots_per_vert_keys = robots_per_vert.keys().cloned().collect::<Vec<_>>();
+            robots_per_vert_keys.sort();
+
+            let first_key = robots_per_vert_keys[0];
+
+            if robots_per_vert.get(&first_key).unwrap() == &1 {
+                one_at_top.push(seconds);
+            }
+
+            seconds += distance;
+            distance = generator_middle(distance);
+
+            visualise(current, bounds, robot_coords);
+            current += step
+        }
+        // for k in 0..3000 {
+        //     let mut robot_coords: Vec<(i32, i32)> = Vec::new();
+        //
+        //     self.robots.iter().for_each(|r| {
+        //         let coords = r.move_robot(bounds, k);
+        //         robot_coords.push(coords);
+        //         // *robots_per_vert.entry(coords.1).or_default() += 1;
+        //
+        //         // if coords.1 == 0 && coords.0 == mid {
+        //         //     robots_in_middle_at_top.insert(seconds, *r);
+        //         // }
+        //     });
+        //
+        //     visualise(k, bounds, robot_coords)
+        // }
+
+        return vec![mid, mid];
+
+
+        let mut i = 0;
+        let mut seconds = 1979; // we start on iteration 12, the first one that has 1 robot in
+                                     // the topmost row that's also in the middle
+        let mut distance = 767; // and the next one is 10 from this one
+        let mut one_at_top:Vec<i32> = Vec::new();
+        // let mut three_on_second: Vec<i32> = Vec::new();
+        let mut robots_in_middle_at_top: HashMap<i32, Robot> = HashMap::new();
+// return vec![];
         loop {
+
             i += 1;
             let mut robots_per_vert:HashMap<i32, i32> = HashMap::new();
-            let mut robot_coords: Vec<(i32, i32)> =    Vec::new();
+            let mut robot_coords: Vec<(i32, i32)> = Vec::new();
 
             self.robots.iter().for_each(|r| {
                 let coords = r.move_robot(bounds, seconds);
                 robot_coords.push(coords);
                 *robots_per_vert.entry(coords.1).or_default() += 1;
+
+                if coords.1 == 0 && coords.0 == mid {
+                    robots_in_middle_at_top.insert(seconds, *r);
+                }
             });
 
-            // println!("loop {}, iteration {}, distance {}", i, iteration, distance);
+            visualise(seconds, bounds, robot_coords);
 
+            /**
+            So let's find out the first ones
+            */
+            let mut robots_per_vert_keys = robots_per_vert.keys().cloned().collect::<Vec<_>>();
+            robots_per_vert_keys.sort();
 
-
-            // println!("robots per entry: {:?}", robots_per_vert);
-
-            let mut foo = robots_per_vert.keys().cloned().collect::<Vec<_>>();
-            foo.sort();
-
-            let first_key = foo[0];
-            let second_key = foo[1];
-
-            // println!("there are {} robots on the topmost key at {}", robots_per_vert.get(first_key).unwrap(), first_key);
+            let first_key = robots_per_vert_keys[0];
 
             if robots_per_vert.get(&first_key).unwrap() == &1 {
                 one_at_top.push(seconds);
-                // visualise(iteration, bounds, robot_coords);
-            }
-
-            if robots_per_vert.get(&second_key).unwrap() == &3 {
-                three_on_second.push(seconds);
             }
 
             seconds += distance;
-            distance = generator(distance);
+            distance = generator_middle(distance);
 
-
-            if i > 30000 {
+            if i > 1000 {
                 break;
             }
             //
@@ -123,13 +188,16 @@ impl Day14 {
 
             // we need iterations where the result is divisible by height
             // r.start_vertical + i * r.move_vertical = 100x
-
         }
 
+        let mut robots_in_middle_at_top_keys = robots_in_middle_at_top.keys().cloned().collect::<Vec<_>>();
+        robots_in_middle_at_top_keys.sort();
+
         let mut previous = 0;
-        for l in three_on_second {
-            println!("at seconds {} there are three on second row, a distance of {} from the previous",
-            l, l-previous);
+        for l in robots_in_middle_at_top_keys {
+            println!("at seconds {} the top one is in the middle, a distance of {} from the previous",
+                     l, l-previous,);
+            previous = l;
         }
         // for l in one_at_top {
         //     // this yields a
@@ -202,8 +270,6 @@ fn visualise(iteration: i32, bounds: (i32, i32), input: Vec<(i32, i32)>) {
 
     let mut file = File::create(iteration.to_string() + "tree.txt").unwrap();
     file.write_all(s.as_bytes()).unwrap();
-
-    // println!("{}", s);
 }
 
 fn generator(previous: i32) -> i32 {
@@ -212,6 +278,20 @@ fn generator(previous: i32) -> i32 {
         46 => {47}
         47 => {10}
         _ => {103}
+    }
+}
+
+// at seconds 2746 the top one is in the middle, a distance of 767 from the previous
+// at seconds 4853 the top one is in the middle, a distance of 2107 from the previous
+// at seconds 12382 the top one is in the middle, a distance of 7529 from the previous
+
+
+fn generator_middle(previous: i32) -> i32 {
+    match previous {
+        767 => {2107}
+        2107 => {7529}
+        7529 => {767}
+        _ => {767}
     }
 }
 

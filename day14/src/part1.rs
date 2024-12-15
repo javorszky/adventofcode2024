@@ -30,7 +30,7 @@ impl Display for BadRobotError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub(crate) struct Robot {
     starting_position_horizontal: i32,
     starting_position_vertical: i32,
