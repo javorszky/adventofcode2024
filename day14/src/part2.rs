@@ -1,17 +1,17 @@
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::Write;
-use crate::part1::{Day14, Robot};
+use crate::part1::{Day14};
 
 impl Day14 {
+    #[allow(dead_code)]
     fn find_easter_egg(&self) -> i32 {
-
         // let l = self.robots.len();
-
         let _ = self.find_iterations_where_robots_are_in_middle_topmost_row();
         0
     }
 
+    #[allow(dead_code)]
     fn check_for_flood_fill(&self) -> i32 {
         let mut i = 0;
         let bounds = (self.width, self.height);
@@ -63,7 +63,7 @@ impl Day14 {
         let mut seconds = 0;
         let mut distance = 0;
 
-        for i in 0..3000 {
+        for _i in 0..3000 {
             let mut robot_coords: Vec<(i32, i32)> = Vec::new();
             let mut robots_per_vert: HashMap<i32, i32> = HashMap::new();
 
@@ -77,7 +77,7 @@ impl Day14 {
                 // }
             });
 
-            /**
+            /*
             So let's find out the first ones
             */
             let mut robots_per_vert_keys = robots_per_vert.keys().cloned().collect::<Vec<_>>();
@@ -111,102 +111,101 @@ impl Day14 {
         //     visualise(k, bounds, robot_coords)
         // }
 
-        return vec![mid, mid];
+        vec![mid, mid]
 
-
-        let mut i = 0;
-        let mut seconds = 1979; // we start on iteration 12, the first one that has 1 robot in
-                                     // the topmost row that's also in the middle
-        let mut distance = 767; // and the next one is 10 from this one
-        let mut one_at_top:Vec<i32> = Vec::new();
-        // let mut three_on_second: Vec<i32> = Vec::new();
-        let mut robots_in_middle_at_top: HashMap<i32, Robot> = HashMap::new();
-// return vec![];
-        loop {
-
-            i += 1;
-            let mut robots_per_vert:HashMap<i32, i32> = HashMap::new();
-            let mut robot_coords: Vec<(i32, i32)> = Vec::new();
-
-            self.robots.iter().for_each(|r| {
-                let coords = r.move_robot(bounds, seconds);
-                robot_coords.push(coords);
-                *robots_per_vert.entry(coords.1).or_default() += 1;
-
-                if coords.1 == 0 && coords.0 == mid {
-                    robots_in_middle_at_top.insert(seconds, *r);
-                }
-            });
-
-            visualise(seconds, bounds, robot_coords);
-
-            /**
-            So let's find out the first ones
-            */
-            let mut robots_per_vert_keys = robots_per_vert.keys().cloned().collect::<Vec<_>>();
-            robots_per_vert_keys.sort();
-
-            let first_key = robots_per_vert_keys[0];
-
-            if robots_per_vert.get(&first_key).unwrap() == &1 {
-                one_at_top.push(seconds);
-            }
-
-            seconds += distance;
-            distance = generator_middle(distance);
-
-            if i > 1000 {
-                break;
-            }
-            //
-            // for r in self.robots.iter() {
-            //     println!("\n------------------------\nrobot we're looking at is {}", r);
-            //     println!("we need mod height {} to be 0", self.height);
-            //
-            //     let mut iterations_where_zero: Vec<i32> = Vec::new();
-            //     let mut i = 0;
-            //     loop {
-            //         if r.move_robot(bounds, i).1 == 0 {
-            //             iterations_where_zero.push(i);
-            //         }
-            //
-            //         i += 1;
-            //
-            //         if i > 320 {
-            //             break;
-            //         }
-            //     }
-            //
-            //     let mut previous = 0;
-            //
-            //     for j in iterations_where_zero.iter() {
-            //         println!("thingy is zero vertically on iteration {}, {} since last", j, j - previous);
-            //         previous = *j;
-            //     }
-            // }
-
-
-            // we need iterations where the result is divisible by height
-            // r.start_vertical + i * r.move_vertical = 100x
-        }
-
-        let mut robots_in_middle_at_top_keys = robots_in_middle_at_top.keys().cloned().collect::<Vec<_>>();
-        robots_in_middle_at_top_keys.sort();
-
-        let mut previous = 0;
-        for l in robots_in_middle_at_top_keys {
-            println!("at seconds {} the top one is in the middle, a distance of {} from the previous",
-                     l, l-previous,);
-            previous = l;
-        }
-        // for l in one_at_top {
-        //     // this yields a
-        //     // println!("iteration {} has one at top, {} since last", l, l-previous);
+        // let mut i = 0;
+        // let mut seconds = 1979; // we start on iteration 12, the first one that has 1 robot in
+        //                              // the topmost row that's also in the middle
+        // let mut distance = 767; // and the next one is 10 from this one
+        // let mut one_at_top:Vec<i32> = Vec::new();
+        // // let mut three_on_second: Vec<i32> = Vec::new();
+        // let mut robots_in_middle_at_top: HashMap<i32, Robot> = HashMap::new();
+        // // return vec![];
+        // loop {
+        //
+        //     i += 1;
+        //     let mut robots_per_vert:HashMap<i32, i32> = HashMap::new();
+        //     let mut robot_coords: Vec<(i32, i32)> = Vec::new();
+        //
+        //     self.robots.iter().for_each(|r| {
+        //         let coords = r.move_robot(bounds, seconds);
+        //         robot_coords.push(coords);
+        //         *robots_per_vert.entry(coords.1).or_default() += 1;
+        //
+        //         if coords.1 == 0 && coords.0 == mid {
+        //             robots_in_middle_at_top.insert(seconds, *r);
+        //         }
+        //     });
+        //
+        //     visualise(seconds, bounds, robot_coords);
+        //
+        //     /*
+        //     So let's find out the first ones
+        //     */
+        //     let mut robots_per_vert_keys = robots_per_vert.keys().cloned().collect::<Vec<_>>();
+        //     robots_per_vert_keys.sort();
+        //
+        //     let first_key = robots_per_vert_keys[0];
+        //
+        //     if robots_per_vert.get(&first_key).unwrap() == &1 {
+        //         one_at_top.push(seconds);
+        //     }
+        //
+        //     seconds += distance;
+        //     distance = generator_middle(distance);
+        //
+        //     if i > 1000 {
+        //         break;
+        //     }
+        //     //
+        //     // for r in self.robots.iter() {
+        //     //     println!("\n------------------------\nrobot we're looking at is {}", r);
+        //     //     println!("we need mod height {} to be 0", self.height);
+        //     //
+        //     //     let mut iterations_where_zero: Vec<i32> = Vec::new();
+        //     //     let mut i = 0;
+        //     //     loop {
+        //     //         if r.move_robot(bounds, i).1 == 0 {
+        //     //             iterations_where_zero.push(i);
+        //     //         }
+        //     //
+        //     //         i += 1;
+        //     //
+        //     //         if i > 320 {
+        //     //             break;
+        //     //         }
+        //     //     }
+        //     //
+        //     //     let mut previous = 0;
+        //     //
+        //     //     for j in iterations_where_zero.iter() {
+        //     //         println!("thingy is zero vertically on iteration {}, {} since last", j, j - previous);
+        //     //         previous = *j;
+        //     //     }
+        //     // }
+        //
+        //
+        //     // we need iterations where the result is divisible by height
+        //     // r.start_vertical + i * r.move_vertical = 100x
+        // }
+        //
+        // let mut robots_in_middle_at_top_keys = robots_in_middle_at_top.keys().cloned().collect::<Vec<_>>();
+        // robots_in_middle_at_top_keys.sort();
+        //
+        // let mut previous = 0;
+        // for l in robots_in_middle_at_top_keys {
+        //     println!("at seconds {} the top one is in the middle, a distance of {} from the previous",
+        //              l, l-previous,);
         //     previous = l;
         // }
-
-
-        vec![]
+        // // for l in one_at_top {
+        // //     // this yields a
+        // //     // println!("iteration {} has one at top, {} since last", l, l-previous);
+        // //     previous = l;
+        // // }
+        //
+        //
+        // vec![]
     }
 }
 
@@ -272,6 +271,7 @@ fn visualise(iteration: i32, bounds: (i32, i32), input: Vec<(i32, i32)>) {
     file.write_all(s.as_bytes()).unwrap();
 }
 
+#[allow(dead_code)]
 fn generator(previous: i32) -> i32 {
     match previous {
         10 => {46}
