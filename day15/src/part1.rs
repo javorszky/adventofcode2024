@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use std::fmt::{Debug, Display, Formatter};
 
 
-struct BadDay15Error{
-    msg: String
+pub(crate) struct BadDay15Error{
+    pub(crate) msg: String
 }
 
 impl Display for BadDay15Error {
@@ -19,38 +19,40 @@ impl Debug for BadDay15Error {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq)]
-enum Entity {
+#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+pub(crate) enum Entity {
     Box,
     Wall,
     Robot,
-    Empty
+    Empty,
+    BoxLeft,
+    BoxRight
 }
 
-#[derive(Copy, Clone)]
-enum MoveCommand {
+#[derive(Copy, Clone, Debug)]
+pub(crate) enum MoveCommand {
     Up,
     Left,
     Down,
     Right
 }
 
-#[derive(Hash, Eq, PartialEq, Copy, Clone)]
-struct Coordinate {
-    horizontal: u32,
-    vertical: u32,
+#[derive(Hash, Eq, PartialEq, Copy, Clone, Debug)]
+pub(crate) struct Coordinate {
+    pub(crate) horizontal: u32,
+    pub(crate) vertical: u32,
 }
 
 impl Coordinate {
-    fn try_from(horizontal: usize, vertical: usize) -> Coordinate {
+    pub(crate) fn try_from(horizontal: usize, vertical: usize) -> Coordinate {
         Coordinate::new(horizontal as u32,vertical as u32)
     }
 
-    fn new(horizontal: u32, vertical: u32) -> Coordinate {
+    pub(crate) fn new(horizontal: u32, vertical: u32) -> Coordinate {
         Coordinate{horizontal, vertical}
     }
 
-    fn next(&self, direction: MoveCommand) -> Coordinate {
+    pub(crate) fn next(&self, direction: MoveCommand) -> Coordinate {
         match direction {
             MoveCommand::Up => {Coordinate::new(self.horizontal, self.vertical-1)}
             MoveCommand::Left => {Coordinate::new(self.horizontal-1, self.vertical)}
@@ -60,66 +62,30 @@ impl Coordinate {
     }
 }
 
-struct Day15 {
-    map: HashMap<Coordinate, Entity>,
-    commands: Vec<MoveCommand>,
-    robot: Coordinate,
+pub(crate) struct Day15 {
+    pub(crate) map: HashMap<Coordinate, Entity>,
+    pub(crate) commands: Vec<MoveCommand>,
+    pub(crate) robot: Coordinate,
+    pub(crate) bounds: (u32, u32)
 }
-
 
 impl Day15 {
     fn try_from(input: &str) -> Result<Day15, BadDay15Error> {
         let parts = input.trim().split("\n\n").collect::<Vec<_>>();
 
-        // Parse the map
-        let mut map: HashMap<Coordinate, Entity> = HashMap::new();
-        let mut robot_coordinate: Option<Coordinate> = None;
+        let commands = parse_commands(parts[1])?;
+        let (map, robot_coordinate, bounds) = parse_map(parts[0])?;
 
-        let map_input = parts[0].trim();
+        Ok(Day15::new(map, commands, robot_coordinate, bounds))
+    }
 
-        for (vertical, l) in map_input.lines().enumerate() {
-            for (horizontal, c) in l.chars().enumerate() {
-                let e = match c {
-                    '#' => Entity::Wall,
-                    '.' => Entity::Empty,
-                    'O' => Entity::Box,
-                    '@' => {
-                        robot_coordinate = Some(Coordinate::try_from(horizontal, vertical));
-                        Entity::Robot
-                    },
-                    _ => {
-                        println!("Illegal character found at line {} char {}", vertical, horizontal
-                        );
-                        return Err(BadDay15Error{msg: format!("Unexpected character '{}'", c)})}
-                };
-
-                map.insert(Coordinate::try_from(horizontal, vertical), e);
-            }
-        }
-
-        if robot_coordinate.is_none() {
-            return Err(BadDay15Error{msg: "No robot found".to_string()})
-        }
-
-        let mut commands = Vec::new();
-
-        // Parse the commands
-        for (idx, c) in parts[1].replace("\n", "").trim().chars().enumerate() {
-            let command = match c {
-                '<' => MoveCommand::Left,
-                '>' => MoveCommand::Right,
-                '^' => MoveCommand::Up,
-                'v' => MoveCommand::Down,
-                _ => {
-                    println!("Illegal character found for char {} at idx {}", c, idx);
-
-                    return Err(BadDay15Error{msg: format!("Unexpected character '{}'", c)})}
-            };
-
-            commands.push(command);
-        }
-
-        Ok(Day15{map, commands, robot: robot_coordinate.unwrap()})
+    pub(crate) fn new(
+        map: HashMap<Coordinate, Entity>,
+        commands: Vec<MoveCommand>,
+        robot: Coordinate,
+        bounds: (u32, u32)
+    ) -> Day15 {
+        Day15 { map, commands, robot, bounds }
     }
 
     fn walk(&mut self) {
@@ -189,6 +155,72 @@ impl Day15 {
         }
     }
 }
+
+
+pub(crate) fn parse_commands(input: &str) -> Result<Vec<MoveCommand>, BadDay15Error> {
+    let mut commands = Vec::new();
+
+    // Parse the commands
+    for (idx, c) in input.replace("\n", "").trim().chars().enumerate() {
+        let command = match c {
+            '<' => MoveCommand::Left,
+            '>' => MoveCommand::Right,
+            '^' => MoveCommand::Up,
+            'v' => MoveCommand::Down,
+            _ => {
+                println!("Illegal character found for char {} at idx {}", c, idx);
+
+                return Err(BadDay15Error{msg: format!("Unexpected character '{}'", c)})}
+        };
+
+        commands.push(command);
+    }
+
+    Ok(commands)
+}
+
+pub(crate) fn parse_map(input: &str) -> Result<(HashMap<Coordinate, Entity>, Coordinate, (u32, u32)), BadDay15Error> {
+    let mut map: HashMap<Coordinate, Entity> = HashMap::new();
+    let mut robot_coordinate: Option<Coordinate> = None;
+    let mut max_h = 0;
+    let mut max_v = 0;
+
+    for (vertical, l) in input.trim().lines().enumerate() {
+        if vertical > max_v {
+            max_v = vertical;
+        }
+
+        for (horizontal, c) in l.chars().enumerate() {
+            if horizontal > max_h {
+                max_h = horizontal;
+            }
+
+            let e = match c {
+                '#' => Entity::Wall,
+                '.' => Entity::Empty,
+                'O' => Entity::Box,
+                '@' => {
+                    robot_coordinate = Some(Coordinate::try_from(horizontal, vertical));
+                    Entity::Robot
+                },
+                _ => {
+                    println!("Illegal character found at line {} char {}", vertical, horizontal
+                    );
+                    return Err(BadDay15Error{msg: format!("Unexpected character '{}'", c)})}
+            };
+
+            // insert the first one as normal
+            map.insert(Coordinate::try_from(horizontal, vertical), e);
+        }
+    }
+
+    if robot_coordinate.is_none() {
+        return Err(BadDay15Error{msg: "No robot found".to_string()})
+    }
+
+    Ok((map, robot_coordinate.unwrap(), (max_h as u32, max_v as u32)))
+}
+
 
 pub(crate) fn solve(input: &str) -> u32 {
     let mut d = Day15::try_from(input).unwrap();

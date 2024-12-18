@@ -86,6 +86,10 @@ fn main() {
     // println!("Day 14 part 2: {}", day14::solve_part2());
 
     // Day 15
-    println!("\nDay 15 part 1 example: {}", day15::solve_part1_example());
-    println!("Day 15 part 1: The total sum of GPS coordinates of boxes is {}", day15::solve_part1());
+    // println!("\nDay 15 part 1 example: {}", day15::solve_part1_example());
+    println!("\nDay 15 part 1: The total sum of GPS coordinates of boxes is {}", day15::solve_part1());
+
+    // println!("\nDay 15 part 2 example: {}", day15::solve_part2_example());
+    // println!("\nDay 15 part 2 tiny example: {}", day15::solve_part2_tinyexample());
+    println!("Day 15 part 2: Total sum of GPS coordinates for W I D E  B O I S is {}", day15::solve_part2());
 }
